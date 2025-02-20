@@ -33,7 +33,7 @@ build/
 .vscode/
 
 ### application secrets
-src/main/resources/application-secrets.properties
+/src/main/resources/application-secrets.properties
 
 *.sql
 *.pdf
