@@ -1,0 +1,5 @@
+*.sql
+*.pdf
+
+/Frontend
+/com.inn.cafe/src/main/resources/application-secrets.properties

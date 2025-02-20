@@ -34,6 +34,3 @@ build/
 
 ### application secrets
 /src/main/resources/application-secrets.properties
-
-*.sql
-*.pdf
