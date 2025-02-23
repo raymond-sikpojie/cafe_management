@@ -5,6 +5,10 @@ pipeline {
         maven 'maven_399'
     }
 
+    environment {
+        SECRETS = credentials('application-secrets)'
+    }
+
     stages {
         stage('Checkout') {
             steps {
@@ -16,6 +20,16 @@ pipeline {
             steps {
                 sh 'echo Print Maven Version'
                 sh 'mvn -version'
+            }
+        }
+
+        stage('Setup Application Properties') {
+            steps {
+                dir('com.inn.cafe)' {
+                    // Copy the application-secrets file into the resources folder
+                    sh 'cp $SECRETS src/main/resources/application-secrets.properties'
+                }
+
             }
         }
 
@@ -34,6 +48,13 @@ pipeline {
                     sh "mvn test"
                 }
             }
+        }
+    }
+
+    post {
+        always {
+            // Clean up secrets after build
+            sh 'rm -f src/main/resources/application-secrets.properties'
         }
     }
 
