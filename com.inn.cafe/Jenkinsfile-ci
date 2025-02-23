@@ -28,7 +28,6 @@ pipeline {
                 dir('com.inn.cafe') {
                     sh '''
                         # Create directories if they don't exist
-                        mkdir -p src/main/resources
                         mkdir -p target/classes
 
                         # Set permissions as current user
