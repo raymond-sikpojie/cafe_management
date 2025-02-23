@@ -15,7 +15,6 @@ pipeline {
 
         stage('Build') {
             steps {
-                cd com.inn.cafe
                 sh "mvn clean verify -DskipTests=true"
             }
         }
