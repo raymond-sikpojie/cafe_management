@@ -23,25 +23,39 @@ pipeline {
             }
         }
 
+        stage('Debug Permissions') {
+            steps {
+                sh '''
+                    echo "Secret file location and permissions:"
+                    ls -la $SECRETS
+                    echo "Current directory:"
+                    pwd
+                    echo "Parent directory permissions:"
+                    ls -la ..
+                '''
+            }
+        }
+
         stage('Setup Application Properties') {
             steps {
                 dir('com.inn.cafe') {
                     sh '''
-                        # Create directories if they don't exist
-                        mkdir -p target/classes
+                        echo "Before copy - directory structure:"
+                        ls -la src/main/resources/
 
-                        # Set permissions as current user
-                        chmod 755 src/main/resources
-                        chmod 755 target/classes
+                        # Try copying with preserving permissions
+                        cp -p "$SECRETS" src/main/resources/application-secrets.properties || {
+                            echo "Copy failed. Trying with intermediate step..."
+                            # Create an intermediate copy with explicit permissions
+                            cat "$SECRETS" > temp_secrets.properties
+                            chmod 644 temp_secrets.properties
+                            mv temp_secrets.properties src/main/resources/application-secrets.properties
+                        }
 
-                        # Copy the secrets file
-                        cp "$SECRETS" src/main/resources/application-secrets.properties
-
-                        # Verify the file was copied
+                        echo "After copy - check if file exists:"
                         ls -la src/main/resources/application-secrets.properties
                     '''
                 }
-
             }
         }
 
