@@ -6,6 +6,15 @@ pipeline {
     }
 
     stages {
+        stage('Setup') {
+            steps {
+                dir('com.inn.cafe') {
+                    script {
+                        env.WORKSPACE = pwd()
+                    }
+                }
+            }
+        }
         stage('Echo version') {
             steps {
                 sh 'echo Print Maven Version'
@@ -15,6 +24,7 @@ pipeline {
 
         stage('Build') {
             steps {
+                cd com.inn.cafe
                 sh "mvn clean verify -DskipTests=true"
             }
         }
