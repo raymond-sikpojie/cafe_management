@@ -1,5 +1,10 @@
 *.sql
 *.pdf
+.idea
+*.iws
+*.iml
+*.ipr
+
 
 /Frontend
 /com.inn.cafe/src/main/resources/application-secrets.properties
