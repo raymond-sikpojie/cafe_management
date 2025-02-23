@@ -26,8 +26,12 @@ pipeline {
         stage('Setup Application Properties') {
             steps {
                 dir('com.inn.cafe') {
-                    // Copy the application-secrets file into the resources folder
-                    sh 'cp $SECRETS src/main/resources/application-secrets.properties'
+                    sh '''
+                        chmod 755 src/main/resources
+                        chmod 755 target/classes
+                        cp $SECRETS src/main/resources/application-secrets.properties
+                        chmod 644 src/main/resources/application-secrets.properties
+                    '''
                 }
 
             }
