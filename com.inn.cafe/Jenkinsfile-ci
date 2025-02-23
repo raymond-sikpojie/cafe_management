@@ -6,6 +6,12 @@ pipeline {
     }
 
     stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+
         stage('Echo version') {
             steps {
                 sh 'echo Print Maven Version'
@@ -15,7 +21,10 @@ pipeline {
 
         stage('Build') {
             steps {
-                sh "mvn clean verify -DskipTests=true"
+                dir('com.inn.cafe') {
+                    sh "mvn clean verify -DskipTests=true"
+                }
+
             }
         }
 
