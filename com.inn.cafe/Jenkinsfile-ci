@@ -6,7 +6,7 @@ pipeline {
     }
 
     environment {
-        SECRETS = credentials('application-secrets)'
+        SECRETS = credentials('application-secrets')
     }
 
     stages {
@@ -48,6 +48,13 @@ pipeline {
                     sh "mvn test"
                 }
             }
+        }
+    }
+
+    post {
+        always {
+            // Clean up secrets after build
+            sh 'rm -f src/main/resources/application-secrets.properties'
         }
     }
 
