@@ -23,19 +23,6 @@ pipeline {
             }
         }
 
-        stage('Debug Permissions') {
-            steps {
-                sh '''
-                    echo "Secret file location and permissions:"
-                    ls -la $SECRETS
-                    echo "Current directory:"
-                    pwd
-                    echo "Parent directory permissions:"
-                    ls -la ..
-                '''
-            }
-        }
-
         stage('Setup Application Properties') {
             steps {
                 dir('com.inn.cafe') {
@@ -43,14 +30,10 @@ pipeline {
                         echo "Before copy - directory structure:"
                         ls -la src/main/resources/
 
-                        # Try copying with preserving permissions
-                        cp -p "$SECRETS" src/main/resources/application-secrets.properties || {
-                            echo "Copy failed. Trying with intermediate step..."
-                            # Create an intermediate copy with explicit permissions
-                            cat "$SECRETS" > temp_secrets.properties
-                            chmod 644 temp_secrets.properties
-                            mv temp_secrets.properties src/main/resources/application-secrets.properties
-                        }
+                        # Create an intermediate copy with explicit permissions
+                        cat "$SECRETS" > temp_secrets.properties
+                        chmod 644 temp_secrets.properties
+                        mv temp_secrets.properties src/main/resources/application-secrets.properties
 
                         echo "After copy - check if file exists:"
                         ls -la src/main/resources/application-secrets.properties
@@ -79,8 +62,11 @@ pipeline {
 
     post {
         always {
-            // Clean up secrets after build
-            sh 'rm -f src/main/resources/application-secrets.properties'
+            dir('com.inn.cafe') {
+                // Clean up secrets after build
+                sh 'rm -f src/main/resources/application-secrets.properties'
+            }
+
         }
     }
 
