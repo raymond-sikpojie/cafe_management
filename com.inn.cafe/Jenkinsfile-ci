@@ -27,10 +27,28 @@ pipeline {
             steps {
                 dir('com.inn.cafe') {
                     sh '''
-                        chmod 755 src/main/resources
-                        chmod 755 target/classes
+                        echo "Current user:"
+                        whoami
+                        echo "Directory permissions before:"
+                        ls -la
+
+                        # Create directories if they don't exist
+                        mkdir -p target/classes
+
+                        # Change ownership of directories to Jenkins user
+                        sudo chown -R jenkins:jenkins src/main/resources
+                        sudo chown -R jenkins:jenkins target
+
+                        # Set permissions
+                        chmod -R 755 src/main/resources
+                        chmod -R 755 target
+
+                        # Copy the secrets file
                         cp $SECRETS src/main/resources/application-secrets.properties
                         chmod 644 src/main/resources/application-secrets.properties
+
+                        echo "Directory permissions after:"
+                        ls -la src/main/resources
                     '''
                 }
 
