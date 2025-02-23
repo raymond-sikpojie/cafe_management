@@ -46,7 +46,7 @@ pipeline {
             steps {
                 dir('com.inn.cafe') {
                     sh "mvn clean verify -DskipTests=true"
-                    // archiveArtifacts artifacts: 'target/com.inn.cafe-*.jar', followSymlinks: false
+                    archiveArtifacts artifacts: 'target/com.inn.cafe-*.jar', followSymlinks: false
                 }
 
             }
